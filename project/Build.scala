@@ -11,6 +11,7 @@ object OrganizeImportsBuild extends Build {
     file("."),
     settings = Defaults.defaultSettings ++ Seq(
       //sbtPlugin := true,
+      scalaVersion := "2.11.8",
       name := projectName,
       description := "sbt plugin to organize imports on compile",
       organization := "ai.x",
@@ -18,9 +19,7 @@ object OrganizeImportsBuild extends Build {
       version in ThisBuild := "0.9",
       libraryDependencies ++= Seq(
         "org.scala-refactoring" % ("org.scala-refactoring.library_" ++ scalaVersion.value) % "0.9.1",
-        "org.scala-lang" % "scala-library" % scalaVersion.value,
-        "org.scala-lang" % "scala-compiler" % scalaVersion.value,
-        "org.scala-lang" % "scala-reflect" % scalaVersion.value
+        "org.scala-lang" % "scala-compiler" % scalaVersion.value
       ),
       scalacOptions ++= List(
         "-unchecked",
