@@ -18,9 +18,9 @@ object OrganizeImportsBuild extends Build {
       version in ThisBuild := "0.9",
       libraryDependencies ++= Seq(
         "org.scala-refactoring" % ("org.scala-refactoring.library_" ++ scalaVersion.value) % "0.9.1",
-        "org.scala-lang" % "scala-library" % "2.10.6",
-        "org.scala-lang" % "scala-compiler" % "2.10.6",
-        "org.scala-lang" % "scala-reflect" % "2.10.6"
+        "org.scala-lang" % "scala-library" % scalaVersion.value,
+        "org.scala-lang" % "scala-compiler" % scalaVersion.value,
+        "org.scala-lang" % "scala-reflect" % scalaVersion.value
       ),
       scalacOptions ++= List(
         "-unchecked",
