@@ -10,6 +10,7 @@ import scala.tools.refactoring.util._
 import scala.tools.refactoring.common._
 import scala.tools.refactoring.implementations.OrganizeImports
 import scala.reflect.internal.util.BatchSourceFile
+import scala.tools.refactoring.analysis.GlobalIndexes
 
 object doOrganizeImports {
   def main(args:Array[String]): Unit = {
@@ -64,21 +65,40 @@ object doOrganizeImports {
   }
   */
   def fileName = "someFileName"
-  val refactoring = new OrganizeImports{ val global = CompilerInstance.compiler }
   def refactor(source: String): String = {
-    import refactoring._
-    import refactoring.global._
     val file = new BatchSourceFile(fileName, source)
     try{
-      ask { () =>
-        val response = new Response[Tree]
-        askLoadedTyped(file, true, response)
-        val tree: Tree = unitOfFile(file.file).body
+      val refactoring = new OrganizeImports with GlobalIndexes{
+        val global = CompilerInstance.compiler
+        import global._
         
+        val tree: Tree = ask { () =>
+          val response = new Response[Tree]
+          askLoadedTyped(file, true, response)
+          unitOfFile(file.file).body
+          global.unitOfFile(file.file).body
+        }
+
+        override val index = ask { () =>
+          GlobalIndex( // --> scala.reflect.internal.FatalError: class StringContext does not have a member f
+            //List(
+            //  CompilationUnitIndex(
+                tree//global.unitOfFile(tree.pos.source.file).body
+            //  )
+            //)
+          )
+        }
+      }
+      import refactoring._
+      import refactoring.global._
+
+      ask { () =>
+        /*
         response.get match {
           case Left(value) => value
           case Right(error) => throw error // scala.reflect.internal.FatalError: class StringContext does not have a member f
         }
+        */
 
         /*
         if (project.expectCompilingCode) {

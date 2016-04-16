@@ -18,7 +18,7 @@ object OrganizeImportsBuild extends Build {
       name := projectName,
       version in ThisBuild := "0.9",
       libraryDependencies ++= Seq(
-        "org.scala-refactoring" % ("org.scala-refactoring.library_" ++ scalaVersion.value) % "0.9.1",
+        "org.scala-refactoring" % ("org.scala-refactoring.library_" ++ scalaVersion.value) % "0.10.0-SNAPSHOT",
         "org.scala-lang" % "scala-compiler" % scalaVersion.value
       ),
       scalacOptions ++= List(
