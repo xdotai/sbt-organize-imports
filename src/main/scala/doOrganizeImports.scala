@@ -68,17 +68,19 @@ object doOrganizeImports {
   def refactor(source: String): String = {
     val file = new BatchSourceFile(fileName, source)
     try{
-      val refactoring = new OrganizeImports with GlobalIndexes{
+      println(scala.util.Properties.versionString)
+      val refactoring = new OrganizeImports/* with GlobalIndexes*/{
         val global = CompilerInstance.compiler
+        println(global.currentSettings)
         import global._
         
+        val response = new Response[Tree]
         val tree: Tree = ask { () =>
-          val response = new Response[Tree]
           askLoadedTyped(file, true, response)
           unitOfFile(file.file).body
-          global.unitOfFile(file.file).body
         }
 
+        /*
         override val index = ask { () =>
           GlobalIndex( // --> scala.reflect.internal.FatalError: class StringContext does not have a member f
             //List(
@@ -88,18 +90,25 @@ object doOrganizeImports {
             //)
           )
         }
+        */
       }
       import refactoring._
       import refactoring.global._
 
       ask { () =>
-        /*
         response.get match {
           case Left(value) => value
-          case Right(error) => throw error // scala.reflect.internal.FatalError: class StringContext does not have a member f
+          case Right(error) => error.printStackTrace // scala.reflect.internal.FatalError: class StringContext does not have a member f
         }
-        */
 
+        println(""""
+
+READ THIS
+The below unfortunately removes all imports instead of re-arranging them.
+Probably because of the exception durign compilation we got above.
+
+
+""")
         /*
         if (project.expectCompilingCode) {
           trees.foreach { tree =>
